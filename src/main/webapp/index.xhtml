@@ -1,0 +1,24 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<script name="jquery/jquery.js" library="primefaces"></script>
+	<title>Register Message</title>
+</h:head>
+    <p:dataTable var="message" value="#{registerMessage.messageList}">
+    <p:column headerText="Id">
+        <h:outputText value="#{message.messageId}" />
+    </p:column>
+ 
+    <p:column headerText="Subject">
+        <h:outputText value="#{message.subject}" />
+    </p:column>
+ 
+    <p:column headerText="Content">
+        <h:outputText value="#{message.content}" />
+    </p:column>
+
+</p:dataTable>
+</html>
