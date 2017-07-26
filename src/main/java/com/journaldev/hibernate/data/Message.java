@@ -2,13 +2,13 @@ package com.journaldev.hibernate.data;
 
 public class Message {
     
-    private long messageId;
+    private Integer messageId;
     private String subject;
     private String content;
     
     public Message(){}
 
-    public Message(long messageId, String subject, String content) {
+    public Message(Integer messageId, String subject, String content) {
         this.messageId = messageId;
         this.subject = subject;
         this.content = content;
@@ -16,11 +16,11 @@ public class Message {
     
     
 
-    public long getMessageId() {
+    public Integer getMessageId() {
         return messageId;
     }
 
-    public void setMessageId(long meassageId) {
+    public void setMessageId(Integer meassageId) {
         this.messageId = meassageId;
     }
 
