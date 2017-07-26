@@ -4,7 +4,7 @@ PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
 <hibernate-mapping>
 	<class name="com.journaldev.hibernate.data.Message" table="messages">
-		<id name="messageId" column="MESSAGE_ID" type="long">
+		<id name="messageId" column="MESSAGE_ID" type="integer">
 			<generator class="native" />
 		</id>
 		<property name="subject" column="SUBJECT" type="string"/>
