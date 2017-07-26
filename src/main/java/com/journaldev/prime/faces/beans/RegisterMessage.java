@@ -10,31 +10,30 @@ import com.journaldev.hibernate.data.Message;
 import com.journaldev.spring.service.MessageService;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.PostConstruct;
+import javax.faces.bean.ViewScoped;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.LazyDataModel;
 
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class RegisterMessage {
     @ManagedProperty("#{messageService}")
     private MessageService messageService;
+    
+    private LazyDataModel<Message> lazyModel;
+   
+    private Message selectedMessage;
+    
     private Message message = new Message();
+   
     
-    private List<Message> messageList = new ArrayList<Message>();
-
-    public List<Message> getMessageList() {
-        messageList.addAll(messageService.getAllMessages());
-        return messageList;
+    @PostConstruct
+    public void init() {
+        lazyModel = new LazyMessageDataModel(messageService.getAllMessages());
     }
 
-    public void setMessageList(List<Message> messageList) {
-        this.messageList = messageList;
-    }
-    
-    
-
-    public MessageService getMessageService() {
-        return messageService;
-    }
-
+   
     public void setMessageService(MessageService messageService) {
         this.messageService = messageService;
     }
@@ -46,6 +45,26 @@ public class RegisterMessage {
     public void setMessage(Message message) {
         this.message = message;
     }
+
+    public LazyDataModel<Message> getLazyModel() {
+        return lazyModel;
+    }
+
+    public Message getSelectedMessage() {
+        return selectedMessage;
+    }
+
+    public void setSelectedMessage(Message selectedMessage) {
+        this.selectedMessage = selectedMessage;
+    }
+    
+    
+    public void onRowSelect(SelectEvent event) {
+        FacesMessage msg = new FacesMessage("Message Selected", ((Message) event.getObject()).getSubject());
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
+    
+    
     
     
     
@@ -58,13 +77,8 @@ public class RegisterMessage {
 				new FacesMessage("The Message  Is Registered Successfully"));
 		return "";
     }
-    
-    
 
-
-        
-        
-
+   
     
 	
 }
