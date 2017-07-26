@@ -7,18 +7,48 @@
 	<script name="jquery/jquery.js" library="primefaces"></script>
 	<title>Register Message</title>
 </h:head>
-    <p:dataTable var="message" value="#{registerMessage.messageList}">
-    <p:column headerText="Id">
+    
+   <h:body >
+  <h:form id="form">
+      <p:dataTable value="#{registerMessage.lazyModel}" var="message" rows="10" lazy="true"
+      paginator="true"  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink}  
+        {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+      rowsPerPageTemplate="5,10,15" selectionMode="single" id="messageTable" selection="#{registerMessage.selectedMessage}">
+          <p:ajax event="rowSelect" listener="#{registerMessage.onRowSelect}" update=":form:messageDetail" oncomplete="PF('messageDialog').show()" />
+          
+          <p:column headerText="ID" sortBy="#{message.messageId}" filterBy="#{message.messageId}">
         <h:outputText value="#{message.messageId}" />
-    </p:column>
- 
-    <p:column headerText="Subject">
+      </p:column>
+          <p:column headerText="SUBJECT" sortBy="#{message.subject}" filterBy="#{message.subject}">   
         <h:outputText value="#{message.subject}" />
-    </p:column>
- 
-    <p:column headerText="Content">
+      </p:column>
+          <p:column headerText="CONTENT" sortBy="#{message.content}" filterBy="#{message.content}">
         <h:outputText value="#{message.content}" />
-    </p:column>
+      </p:column>
+    </p:dataTable>
+      
+      
+      <p:dialog header="Message Detail" widgetVar="messageDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+        <p:outputPanel id="messageDetail" style="text-align:center;">
+            <p:panelGrid  columns="2" rendered="#{not empty registerMessage.selectedMessage}" columnClasses="label,value">
+                
+ 
+                <h:outputText value="Id:" />
+                <h:outputText value="#{registerMessage.selectedMessage.messageId}" />
+ 
+                <h:outputText value="Subject:" />
+                <h:outputText value="#{registerMessage.selectedMessage.subject}" />
+ 
+                <h:outputText value="Content:" />
+                <h:outputText value="#{registerMessage.selectedMessage.content}" />
+ 
+               
+            </p:panelGrid>
+        </p:outputPanel>
+    </p:dialog>
+      
+   </h:form>
+</h:body>
+    
 
-</p:dataTable>
 </html>
