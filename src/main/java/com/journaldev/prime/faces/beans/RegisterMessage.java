@@ -32,7 +32,7 @@ public class RegisterMessage implements Serializable{
     @PostConstruct
     public void init() {
         messageList = getMessageService().getPaginatedMessages();
-        lazyModel = new LazyMessageDataModel(messageService.getPaginatedMessages());
+        lazyModel = new LazyMessageDataModel(messageList);
     }
 
     public String getFacesMessage() {
@@ -81,7 +81,7 @@ public class RegisterMessage implements Serializable{
     
     public void update(){
         messageUpdateList = messageService.getPaginatedMessages();
-        lazyModelUpdate = new LazyMessageDataModel(messageService.getPaginatedMessages());
+        lazyModelUpdate = new LazyMessageDataModel(messageUpdateList);
         
       
         if(messageUpdateList.size() > messageList.size()){
