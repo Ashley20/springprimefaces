@@ -10,21 +10,27 @@
     
    <h:body >
   <h:form id="form">
+      
+      <f:metadata>
+            <f:event type="preRenderView" listener="#{registerMessage.init()}"/>
+      </f:metadata>
+     
       <p:dataTable value="#{registerMessage.lazyModel}" var="message" rows="10" lazy="true"
       paginator="true"  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink}  
         {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-      rowsPerPageTemplate="5,10,15" selectionMode="single" id="messageTable" selection="#{registerMessage.selectedMessage}">
+      rowsPerPageTemplate="5,10,30" selectionMode="single" id="messageTable" selection="#{registerMessage.selectedMessage}">
           <p:ajax event="rowSelect" listener="#{registerMessage.onRowSelect}" update=":form:messageDetail" oncomplete="PF('messageDialog').show()" />
           
-          <p:column headerText="ID" sortBy="#{message.messageId}" filterBy="#{message.messageId}">
-        <h:outputText value="#{message.messageId}" />
-      </p:column>
-          <p:column headerText="SUBJECT" sortBy="#{message.subject}" filterBy="#{message.subject}">   
-        <h:outputText value="#{message.subject}" />
-      </p:column>
-          <p:column headerText="CONTENT" sortBy="#{message.content}" filterBy="#{message.content}">
-        <h:outputText value="#{message.content}" />
-      </p:column>
+
+          <p:column headerText="KONU" sortBy="#{message.subject}" filterBy="#{message.subject}">   
+            <h:outputText value="#{message.subject}" />
+          </p:column>
+          
+          <p:column headerText="" >
+              <p:commandButton type="button" title="Delete" icon="ui-icon-trash"  actionListener="#{registerMessage.delete(message)}" ajax="false"/>
+          </p:column>
+          
+        
     </p:dataTable>
       
       
@@ -47,6 +53,11 @@
         </p:outputPanel>
     </p:dialog>
       
+     
+    <p:growl id="growl" showDetail="true" sticky="true" />
+   <p:poll interval="3"   
+            listener="#{registerMessage.update}" update="form"
+    />  
    </h:form>
 </h:body>
     
