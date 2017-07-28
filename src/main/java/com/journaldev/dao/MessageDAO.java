@@ -12,6 +12,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 
 
@@ -21,7 +22,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class MessageDAO  {
+public class MessageDAO implements IMessageDAO {
     
     @Autowired
     private SessionFactory sessionFactory;
@@ -35,20 +36,24 @@ public class MessageDAO  {
     }
     
     
-
+    @Transactional
+    @Override
     public List<Message> getPaginatedMessages() {
        return (List<Message>)sessionFactory.getCurrentSession().createQuery("from Message").list();
     }
 
-
+    @Transactional
+    @Override
     public void register(Message message) {
         sessionFactory.getCurrentSession().save(message);
     }
 
-
+   
+    @Transactional
+    @Override
     public void delete(Integer id) {
         Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("delete Message where messageId = : ID");
+        Query query = session.createQuery("delete Message where messageId=:ID");
         query.setParameter("ID", id);
         
         int result = query.executeUpdate();
