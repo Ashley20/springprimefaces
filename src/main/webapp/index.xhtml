@@ -27,7 +27,7 @@
           </p:column>
           
           <p:column headerText="" >
-              <p:commandButton type="button" title="Delete" icon="ui-icon-trash"  actionListener="#{registerMessage.delete(message)}" ajax="false"/>
+              <p:commandButton type="submit" title="Delete" icon="ui-icon-trash"  actionListener="#{registerMessage.delete(message)}" ajax="false"/>
           </p:column>
           
         
@@ -37,10 +37,7 @@
       <p:dialog header="Message Detail" widgetVar="messageDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
         <p:outputPanel id="messageDetail" style="text-align:center;">
             <p:panelGrid  columns="2" rendered="#{not empty registerMessage.selectedMessage}" columnClasses="label,value">
-                
- 
-                <h:outputText value="Id:" />
-                <h:outputText value="#{registerMessage.selectedMessage.messageId}" />
+               
  
                 <h:outputText value="Subject:" />
                 <h:outputText value="#{registerMessage.selectedMessage.subject}" />
