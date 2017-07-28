@@ -9,7 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @Component
-public class MessageService {
+public class MessageService implements IMessageService {
 	
     @Autowired
     private MessageDAO messageDAO;
@@ -23,17 +23,20 @@ public class MessageService {
     }
         
     @Transactional
+    @Override
     public void register(Message message){
         messageDAO.register(message);
     }
         
     @Transactional
+    @Override
     public List<Message> getPaginatedMessages(){
         return messageDAO.getPaginatedMessages();
             
     }
 
-
+    @Transactional
+    @Override
     public void delete(Integer id) {
         messageDAO.delete(id);
             
