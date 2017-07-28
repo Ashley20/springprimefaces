@@ -3,39 +3,53 @@ package com.journaldev.prime.faces.beans;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-
 import com.journaldev.hibernate.data.Message;
 import com.journaldev.spring.service.MessageService;
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ViewScoped;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 
+
 @ManagedBean
 @ViewScoped
-public class RegisterMessage {
-    @ManagedProperty("#{messageService}")
+public class RegisterMessage implements Serializable{
+    @ManagedProperty(value="#{messageService}")
     private MessageService messageService;
     
     private LazyDataModel<Message> lazyModel;
-   
+    private LazyDataModel<Message> lazyModelUpdate;
+    private List<Message> messageList;
+    private List<Message> messageUpdateList;
     private Message selectedMessage;
-    
     private Message message = new Message();
+    private String facesMessage;
    
     
     @PostConstruct
     public void init() {
-        lazyModel = new LazyMessageDataModel(messageService.getAllMessages());
+        messageList = getMessageService().getPaginatedMessages();
+        lazyModel = new LazyMessageDataModel(messageService.getPaginatedMessages());
+    }
+
+    public String getFacesMessage() {
+        return facesMessage;
+    }
+
+    public void setFacesMessage(String facesMessage) {
+        this.facesMessage = facesMessage;
     }
 
    
     public void setMessageService(MessageService messageService) {
         this.messageService = messageService;
+    }
+    
+    public MessageService getMessageService(){
+        return messageService;
     }
 
     public Message getMessage() {
@@ -65,6 +79,31 @@ public class RegisterMessage {
     }
     
     
+    public void update(){
+        messageUpdateList = messageService.getPaginatedMessages();
+        lazyModelUpdate = new LazyMessageDataModel(messageService.getPaginatedMessages());
+        
+      
+        if(messageUpdateList.size() > messageList.size()){
+           
+            
+            lazyModel = lazyModelUpdate;
+            messageList = messageUpdateList;
+            //create faces message
+        facesMessage = "Hey, you have some new messages!";
+        FacesContext context = FacesContext.getCurrentInstance();
+        context.addMessage(null, new FacesMessage(facesMessage));
+       
+            
+        }
+        
+        else if(messageUpdateList.size() < messageList.size()){
+            lazyModel = lazyModelUpdate;
+        }
+          
+    }
+    
+    
     
     
     
@@ -77,8 +116,16 @@ public class RegisterMessage {
 				new FacesMessage("The Message  Is Registered Successfully"));
 		return "";
     }
-
-   
     
+    public String delete(Message message){
+        messageService.delete(message.getMessageId());
+        
+        //send successfully deleted message to the user
+        FacesContext.getCurrentInstance().addMessage(null, 
+				new FacesMessage("The Message  Is Deleted Successfully"));
+		return "";
+    }
+    
+   
 	
 }
