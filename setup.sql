@@ -5,3 +5,5 @@ CREATE TABLE `employee` (
   `EMP_SALARY` decimal(11,4) DEFAULT NULL,
   PRIMARY KEY (`EMP_ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+//hatemalimam/lazyprime
