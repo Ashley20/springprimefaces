@@ -7,3 +7,4 @@ CREATE TABLE `employee` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 //hatemalimam/lazyprime
+// https://stackoverflow.com/questions/13972193/how-to-query-data-for-primefaces-datatable-using-lazy-loading-and-pagination
