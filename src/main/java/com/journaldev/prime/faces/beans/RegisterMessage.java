@@ -115,7 +115,7 @@ public class RegisterMessage implements Serializable{
   
     
    /*  <p:poll interval="3"   
-            listener="#{registerMessage.update}" update="form"
+            listener="#{registerMessage.update}" update="form"       d
     /> */
 	
 }
