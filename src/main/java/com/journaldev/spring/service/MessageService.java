@@ -2,14 +2,17 @@ package com.journaldev.spring.service;
 
 import com.journaldev.dao.MessageDAO;
 import com.journaldev.hibernate.data.Message;
+import java.util.Collection;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 @Component
-public class MessageService implements IMessageService {
+public class MessageService{
 	
     @Autowired
     private MessageDAO messageDAO;
@@ -23,23 +26,26 @@ public class MessageService implements IMessageService {
     }
         
     @Transactional
-    @Override
     public void register(Message message){
         messageDAO.register(message);
     }
         
     @Transactional
-    @Override
-    public List<Message> getPaginatedMessages(){
-        return messageDAO.getPaginatedMessages();
-            
-    }
+    public List<Message> getPaginatedMessages(int first, int pageSize){
+        return messageDAO.getPaginatedMessages(first, pageSize);
+  }
 
     @Transactional
-    @Override
     public void delete(Integer id) {
         messageDAO.delete(id);
             
     }
+
+    @Transactional
+    public int getCount() {
+        return messageDAO.getCount();
+    }
+
+      
 
 }
