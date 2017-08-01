@@ -6,6 +6,7 @@
 package com.journaldev.prime.faces.beans;
 
 import com.journaldev.hibernate.data.Message;
+import com.journaldev.spring.service.MessageService;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,17 +16,31 @@ import java.util.Map;
 import org.primefaces.model.LazyDataModel;
 import org.primefaces.model.SortOrder;
 
+
 /**
  *
  * @author xdidemk
  */
 public class LazyMessageDataModel extends LazyDataModel<Message> {
     
-    private List<Message> datasource;
+    public List<Message> datasource;
+    private int count;
+    private MessageService messageService;
 
-    public LazyMessageDataModel(List<Message> datasource) {
+    public LazyMessageDataModel(MessageService messageService) {
+       this.messageService = messageService;
+       this.datasource = Collections.emptyList();
+    }
+
+    public List<Message> getDatasource() {
+        return datasource;
+    }
+
+    public void setDatasource(List<Message> datasource) {
         this.datasource = datasource;
     }
+    
+    
     
    @Override
     public Message getRowData(String rowKey) {
@@ -43,11 +58,28 @@ public class LazyMessageDataModel extends LazyDataModel<Message> {
         return message.getMessageId().toString();
     }
     
+    @Override
+    public void setRowIndex(int rowIndex) {
+        if (getPageSize() == 0) {
+            super.setRowIndex(-1);
+        } else {
+            super.setRowIndex(rowIndex);
+        }    
+    }
+         
+       
     
     @Override
     public List<Message> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String,Object> filters) {
+         
         List<Message> data = new ArrayList<Message>();
- 
+        System.out.println("first : " + first + "pageSize: " + pageSize + "SortField: " + sortField + "sortorder: " + sortOrder);
+   
+        datasource =  messageService.getPaginatedMessages(first, pageSize);
+        count = messageService.getCount();
+        this.setRowCount(count);
+
+        
         //filter
         for(Message message : datasource) {
             boolean match = true;
@@ -57,7 +89,7 @@ public class LazyMessageDataModel extends LazyDataModel<Message> {
                     try {
                         String filterProperty = it.next();
                         Object filterValue = filters.get(filterProperty);
-                        //String fieldValue = String.valueOf(message.getClass().getField(filterProperty).get(message));
+                       
  
                         Field field =  message.getClass().getDeclaredField(filterProperty);
                         field.setAccessible(true);
@@ -80,28 +112,25 @@ public class LazyMessageDataModel extends LazyDataModel<Message> {
             if(match) {
                 data.add(message);
             }
-        }
+        } 
  
-        //sort
+        // sort
         if(sortField != null) {
             Collections.sort(data, new LazySorter(sortField, sortOrder));
         } 
  
-        //rowCount
-        int dataSize = data.size();
-        this.setRowCount(dataSize);
  
-        //paginate
-        if(dataSize > pageSize) {
-            try {
-                return data.subList(first, first + pageSize);
-            }
-            catch(IndexOutOfBoundsException e) {
-                return data.subList(first, first + (dataSize % pageSize));
-            }
+        // paginate
+        if (data.size()  >  pageSize){
+        
+          return data.subList(first, first + pageSize);
+        }else{
+         
+          return data;
         }
-        else {
-            return data;
-        }
-    }
+   } 
+      
+            
+        
+
 }
