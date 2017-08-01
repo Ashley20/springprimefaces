@@ -6,19 +6,28 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import com.journaldev.hibernate.data.Message;
 import com.journaldev.spring.service.MessageService;
+
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.bean.SessionScoped;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
+
+
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
+
 
 
 @ManagedBean
 @ViewScoped
 public class RegisterMessage implements Serializable{
-    @ManagedProperty(value="#{messageService}")
-    private MessageService messageService;
+      @ManagedProperty(value="#{messageService}") 
+      MessageService messageService;  
+    
     
     private LazyDataModel<Message> lazyModel;
     private LazyDataModel<Message> lazyModelUpdate;
@@ -28,11 +37,13 @@ public class RegisterMessage implements Serializable{
     private Message message = new Message();
     private String facesMessage;
    
-    
+
+  
     @PostConstruct
     public void init() {
-        messageList = getMessageService().getPaginatedMessages();
-        lazyModel = new LazyMessageDataModel(messageList);
+        
+        lazyModel = new LazyMessageDataModel(messageService);
+        
     }
 
     public String getFacesMessage() {
@@ -78,34 +89,7 @@ public class RegisterMessage implements Serializable{
         FacesContext.getCurrentInstance().addMessage(null, msg);
     }
     
-    
-    public void update(){
-        messageUpdateList = messageService.getPaginatedMessages();
-        lazyModelUpdate = new LazyMessageDataModel(messageUpdateList);
-        
-      
-        if(messageUpdateList.size() > messageList.size()){
-           
-            
-            lazyModel = lazyModelUpdate;
-            messageList = messageUpdateList;
-            //create faces message
-        facesMessage = "Hey, you have some new messages!";
-        FacesContext context = FacesContext.getCurrentInstance();
-        context.addMessage(null, new FacesMessage(facesMessage));
-       
-            
-        }
-        
-        else if(messageUpdateList.size() < messageList.size()){
-            lazyModel = lazyModelUpdate;
-        }
-          
-    }
-    
-    
-    
-    
+   
     
     public String register() {
 		// Calling Business Service
@@ -126,6 +110,12 @@ public class RegisterMessage implements Serializable{
 		return "";
     }
     
-   
+  
+    
+  
+    
+   /*  <p:poll interval="3"   
+            listener="#{registerMessage.update}" update="form"
+    /> */
 	
 }
