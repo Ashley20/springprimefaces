@@ -11,17 +11,18 @@
    <h:body >
   <h:form id="form">
       
-      <f:metadata>
-            <f:event type="preRenderView" listener="#{registerMessage.init()}"/>
-      </f:metadata>
      
-      <p:dataTable value="#{registerMessage.lazyModel}" var="message" rows="10" lazy="true"
+     
+      <p:dataTable value="#{registerMessage.lazyModel}" var="message" rows="5" lazy="true"
       paginator="true"  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink}  
         {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
-      rowsPerPageTemplate="5,10,30" selectionMode="single" id="messageTable" selection="#{registerMessage.selectedMessage}">
+      rowsPerPageTemplate="5, 10" selectionMode="single" id="messageTable" selection="#{registerMessage.selectedMessage}">
+         
           <p:ajax event="rowSelect" listener="#{registerMessage.onRowSelect}" update=":form:messageDetail" oncomplete="PF('messageDialog').show()" />
-          
-
+         
+          <p:column headerText="ID" sortBy="#{message.messageId}" filterBy="#{message.messageId}">   
+              <h:outputText value="#{message.messageId}" />
+          </p:column>
           <p:column headerText="KONU" sortBy="#{message.subject}" filterBy="#{message.subject}">   
             <h:outputText value="#{message.subject}" />
           </p:column>
@@ -52,9 +53,7 @@
       
      
     <p:growl id="growl" showDetail="true" sticky="true" />
-   <p:poll interval="3"   
-            listener="#{registerMessage.update}" update="form"
-    />  
+   
    </h:form>
 </h:body>
     
