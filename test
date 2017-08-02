@@ -1,0 +1,61 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.journaldev.dao;
+
+
+import com.journaldev.hibernate.data.Message;
+import java.util.List;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import static org.junit.Assert.*;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
+
+/**
+ *
+ * @author xdidemk
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+
+@ContextConfiguration(locations = "file:src/main/webapp/WEB-INF/applicationContext.xml")
+@TransactionConfiguration(defaultRollback=true)
+public class MessageDAOTest {
+    @Autowired
+    private MessageDAO messageDAO;
+  /*
+     @Before
+    public void init() {
+
+    @Test
+    public void registerTest() {
+        Message ins = new Message();
+        ins.setContent("blabla");
+        ins.setSubject("blababa");
+        messageDAO.register(ins);
+       
+    }
+   
+    @Test
+    public void deleteTest() {
+       int count =  messageDAO.getCount();
+         //messageDAO.delete(5);
+        int count2 = messageDAO.getCount();
+        //assertEquals(count, count2);
+    }
+    
+    @Test
+    public void getPaginatedMessages() {
+        
+    }
+    */
+}
