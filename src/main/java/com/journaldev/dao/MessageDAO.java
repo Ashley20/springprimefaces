@@ -6,13 +6,13 @@
 package com.journaldev.dao;
 
 import com.journaldev.hibernate.data.Message;
+import java.math.BigInteger;
 import java.util.List;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,67 +27,46 @@ import org.springframework.transaction.annotation.Transactional;
 public class MessageDAO {
     
    
-    @Autowired
-    private SessionFactory sessionFactory;
-
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
-    }
-
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
+    @PersistenceContext
+    private EntityManager em;
     
-    
+   
     @Transactional
     public List<Message> getPaginatedMessages(int first, int pageSize) {
         
-        List<Message> messages = null;
-      
-        Session session = sessionFactory.openSession();
-        try {
-            session.beginTransaction();
-            Query query = session.createQuery("from Message");
-           
-              query.setFirstResult(first);
-              query.setMaxResults(pageSize);
-              System.out.println(first + "Bu first " + pageSize + " buda pagesize");
-              messages = (List<Message>) query.list();
-              session.getTransaction().commit();
-              
-      
-   
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
+        List<Message> messages;
+ 
+       
+        Query query = em.createQuery("Select m From Message m", Message.class);
+        query
+                .setFirstResult(first)
+                .setMaxResults(pageSize);
+        messages = (List<Message>) query.getResultList();
+       
+       
         return messages;   
     }
 
     @Transactional
     public void register(Message message) {
-        sessionFactory.getCurrentSession().save(message);
+        em.persist(message);
     }
 
    
     @Transactional
     public void delete(Integer id) {
-        Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("delete Message where messageId=:ID");
-        query.setParameter("ID", id);
-        
-        int result = query.executeUpdate();
-        
+       
+     Message m =  em.find(Message.class, id);
+     em.remove(em.merge(m));
+      
     }
     
     @Transactional
     public int getCount() {
-        int count = ((Long) sessionFactory.getCurrentSession()
-                .createQuery("select count(*) from Message").uniqueResult())
-                .intValue();
-        System.out.println(" count size " + count);
-        return count;
+        
+          Query query = em.createNativeQuery("select count(*) from messages");
+          int count = ((BigInteger) query.getSingleResult()).intValue();
+          return count;
     }
     
     
