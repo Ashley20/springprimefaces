@@ -5,36 +5,50 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/context  http://www.springframework.org/schema/context/spring-context-3.2.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
-	<!-- Enable Spring Annotation Configuration -->
+	
+	
+        <!-- Enable Spring Annotation Configuration -->
 	<context:annotation-config />
 	<!-- Scan for all of Spring components such as Spring Service -->
-	<context:component-scan base-package="com.journaldev"></context:component-scan>
+        <context:component-scan base-package="com.journaldev"></context:component-scan>
+	
+        
+   <bean id="entityManagerFactoryBean" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+                
+    <property name="dataSource" ref="dataSource" />
+    <property name="packagesToScan" value="com.journaldev.hibernate.data"/> 
+        
+      <!-- JpaVendorAdapter implementation for Hibernate EntityManager.
+           Exposes Hibernate's persistence provider and EntityManager extension interface -->
+      <property name="jpaVendorAdapter">
+         <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+      </property>
+      <property name="jpaProperties">
+         <props>
+            <prop key="hibernate.hbm2ddl.auto">validate</prop>
+            <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+         </props>
+      </property>
+   </bean>
+        
+        
 	<!-- Create Data Source bean -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
 		destroy-method="close">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url" value="jdbc:mysql://localhost:3306/sys" />
 		<property name="username" value="root" />
-		<property name="password" value="root" />
+		<property name="password" value="" />
 	</bean>
-	<!-- Define SessionFactory bean -->
-	<bean id="sessionFactory"
-		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="mappingResources">
-			<list>
-				<value>domain-classes.hbm.xml</value>
-			</list>
-		</property>
-		<property name="configLocation">
-            <value>classpath:hibernate.cfg.xml</value>
-        </property>
-	</bean>
-	<!-- Transaction Manager -->
-	<bean id="transactionManager"
-		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-		<property name="sessionFactory" ref="sessionFactory" />
+       
+        
+        <!-- Transaction Manager -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactoryBean" />
 	</bean>
 	<!-- Detect @Transactional Annotation -->
 	<tx:annotation-driven transaction-manager="transactionManager" />
+        
+        
+
 </beans>
