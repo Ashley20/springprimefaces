@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -73,10 +74,11 @@ public class LazyMessageDataModel extends LazyDataModel<Message> {
     public List<Message> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String,Object> filters) {
          
         List<Message> data = new ArrayList<Message>();
-        System.out.println("first : " + first + "pageSize: " + pageSize + "SortField: " + sortField + "sortorder: " + sortOrder);
+      
    
         datasource =  messageService.getPaginatedMessages(first, pageSize);
         count = messageService.getCount();
+        System.out.println(count);
         this.setRowCount(count);
 
         
