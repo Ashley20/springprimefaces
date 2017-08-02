@@ -36,6 +36,9 @@ public class RegisterMessage implements Serializable{
     private Message selectedMessage;
     private Message message = new Message();
     private String facesMessage;
+    private int countFirst;
+    private int countNext;
+  
    
 
   
@@ -43,8 +46,11 @@ public class RegisterMessage implements Serializable{
     public void init() {
         
         lazyModel = new LazyMessageDataModel(messageService);
+        countFirst = messageService.getCount();
+        System.out.println("Burasi init : " + countFirst);
         
     }
+
 
     public String getFacesMessage() {
         return facesMessage;
@@ -101,21 +107,33 @@ public class RegisterMessage implements Serializable{
 		return "";
     }
     
-    public String delete(Message message){
-        messageService.delete(message.getMessageId());
+    public void delete(Message message){
         
-        //send successfully deleted message to the user
-        FacesContext.getCurrentInstance().addMessage(null, 
-				new FacesMessage("The Message  Is Deleted Successfully"));
-		return "";
+        messageService.delete(message.getMessageId()); 
     }
     
-  
+    public String checkNewMessages(){
+     
     
+      countNext = messageService.getCount();
+       
+      if(countNext > countFirst){
+           countFirst = countNext;
+           
+           // Send FaceMessage 
+           FacesContext.getCurrentInstance().addMessage(null, 
+				new FacesMessage("Hey you have some new messages!"));
+		return "";
+                
+      }else if(countNext < countFirst){
+          countFirst = countNext;
+          return "";
+      }
+      else {
+         
+		return "";
+      }
+    }
   
-    
-   /*  <p:poll interval="3"   
-            listener="#{registerMessage.update}" update="form"       d
-    /> */
 	
 }
