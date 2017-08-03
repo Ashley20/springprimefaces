@@ -1,4 +1,3 @@
-
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -7,31 +6,56 @@
 <h:head>
 	<script name="jquery/jquery.js" library="primefaces"></script>
 	<title>Register Message</title>
+        
+        
+<style type="text/css">
+
+.unreadMessageColorStyle{
+    background-color:#0B0A0A!important;
+    background-image:none!important; 
+}
+
+.readMessageColorStyle{
+    background-color:#ffffff!important;
+    background-image:none!important;
+}
+
+</style>
 </h:head>
     
    <h:body >
   <h:form id="form">
       
-     
-     
-      <p:dataTable value="#{registerMessage.lazyModel}" var="message" rows="5" lazy="true"
+      <p:dataTable  value="#{registerMessage.lazyModel}" var="message" rows="5" lazy="true" 
       paginator="true"  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink}  
-        {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"
+      {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"   rowStyleClass=" #{message.read eq 'NO' ? 'unreadMessageColorStyle' :null}"
       rowsPerPageTemplate="5, 10" selectionMode="single" id="messageTable" selection="#{registerMessage.selectedMessage}">
          
           <p:ajax event="rowSelect" listener="#{registerMessage.onRowSelect}" update=":form:messageDetail" oncomplete="PF('messageDialog').show()" />
-         
-          <p:column headerText="ID" sortBy="#{message.messageId}" filterBy="#{message.messageId}">   
+      
+     
+          <p:column headerText="ID"  sortBy="#{message.messageId}" filterBy="#{message.messageId}">   
               <h:outputText value="#{message.messageId}" />
           </p:column>
-          <p:column headerText="KONU" sortBy="#{message.subject}" filterBy="#{message.subject}">   
+        
+          
+      
+          <p:column headerText="KONU"  filterBy="#{message.subject}">   
             <h:outputText value="#{message.subject}" />
           </p:column>
+      
           
+       
+          <p:column headerText="READ" >   
+              <h:outputText value="#{message.read}" />
+          </p:column>
+        
+       
           <p:column headerText="" >
               <p:commandButton type="submit" title="Delete" icon="ui-icon-trash"  actionListener="#{registerMessage.delete(message)}" ajax="false"/>
           </p:column>
-          
+       
+      
         
     </p:dataTable>
       
@@ -46,14 +70,14 @@
  
                 <h:outputText value="Content:" />
                 <h:outputText value="#{registerMessage.selectedMessage.content}" />
- 
-               
+             <p:growl id="growl" showDetail="true" sticky="true" />
+        
             </p:panelGrid>
         </p:outputPanel>
     </p:dialog>
       
-     
-    <p:growl id="growl" showDetail="true" sticky="true" />
+      <p:growl id="growl1" showDetail="true" sticky="true" />
+  
       <p:poll interval="3"   
             listener="#{registerMessage.checkNewMessages}" update="form"
     /> 
