@@ -38,16 +38,13 @@ public class RegisterMessage implements Serializable{
     private String facesMessage;
     private int countFirst;
     private int countNext;
-  
    
-
   
     @PostConstruct
     public void init() {
         
         lazyModel = new LazyMessageDataModel(messageService);
         countFirst = messageService.getCount();
-        System.out.println("Burasi init : " + countFirst);
         
     }
 
@@ -91,8 +88,9 @@ public class RegisterMessage implements Serializable{
     
     
     public void onRowSelect(SelectEvent event) {
-        FacesMessage msg = new FacesMessage("Message Selected", ((Message) event.getObject()).getSubject());
-        FacesContext.getCurrentInstance().addMessage(null, msg);
+        messageService.changeReadProperty(selectedMessage);
+       
+    
     }
     
    
