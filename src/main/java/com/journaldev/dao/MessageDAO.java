@@ -69,6 +69,14 @@ public class MessageDAO {
           return count;
     }
     
+    @Transactional
+    public void changeReadProperty(Message message){
+        Integer id = message.getMessageId();
+        Message m = em.find(Message.class, id);
+        m.setRead("YES");
+        em.merge(m);
+    }
+    
     
     
      
