@@ -56,9 +56,15 @@ public class MessageDAO {
     @Transactional
     public void delete(Integer id) {
        
-     Message m =  em.find(Message.class, id);
+     Message m =  findMessageById(id);
      em.remove(em.merge(m));
       
+    }
+    
+    @Transactional
+    public Message findMessageById(Integer id){
+        return em.find(Message.class, id);
+        
     }
     
     @Transactional
@@ -77,9 +83,11 @@ public class MessageDAO {
         em.merge(m);
     }
     
+    @Transactional
+    public List<Message> getAllMessages(){
+        String queryString = "Select m from Message m";
+        return em.createQuery(queryString,Message.class).getResultList();
+    }
     
-    
-     
-
     
 }
