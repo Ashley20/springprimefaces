@@ -1,10 +1,23 @@
-CREATE TABLE `employee` (
-  `EMP_ID` int(11) NOT NULL AUTO_INCREMENT,
-  `EMP_NAME` varchar(45) DEFAULT NULL,
-  `EMP_HIRE_DATE` datetime DEFAULT NULL,
-  `EMP_SALARY` decimal(11,4) DEFAULT NULL,
-  PRIMARY KEY (`EMP_ID`)
+CREATE TABLE `messages` (
+  `MESSAGE_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `SUBJECT` varchar(45) NOT NULL,
+  `CONTENT` varchar(145) NOT NULL,
+  `MESSAGE_READ` varchar(3) NOT NULL,
+  `DATE` DATETIME,
+  
+  PRIMARY KEY (`MESSAGE_ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-//hatemalimam/lazyprime
-// https://stackoverflow.com/questions/13972193/how-to-query-data-for-primefaces-datatable-using-lazy-loading-and-pagination
+
+INSERT INTO `sys`.`messages` (`MESSAGE_ID`, `SUBJECT`, `CONTENT`, `MESSAGE_READ`, `DATE`) VALUES ('1', '1', '1', 'NO', now());
+INSERT INTO `sys`.`messages` (`MESSAGE_ID`, `SUBJECT`, `CONTENT`, `MESSAGE_READ`, `DATE`) VALUES ('2', '2', '2', 'NO', now());
+INSERT INTO `sys`.`messages` (`MESSAGE_ID`, `SUBJECT`, `CONTENT`, `MESSAGE_READ`, `DATE`) VALUES ('3', '3', '3', 'NO', now());
+INSERT INTO `sys`.`messages` (`MESSAGE_ID`, `SUBJECT`, `CONTENT`, `MESSAGE_READ`, `DATE`) VALUES ('4', '4', '4', 'NO', now());
+INSERT INTO `sys`.`messages` (`MESSAGE_ID`, `SUBJECT`, `CONTENT`, `MESSAGE_READ`, `DATE`) VALUES ('5', '5', '5', 'NO', now());
+INSERT INTO `sys`.`messages` (`MESSAGE_ID`, `SUBJECT`, `CONTENT`, `MESSAGE_READ`, `DATE`) VALUES ('6', '6', '6', 'NO', now());
+INSERT INTO `sys`.`messages` (`MESSAGE_ID`, `SUBJECT`, `CONTENT`, `MESSAGE_READ`, `DATE`) VALUES ('7', '7', '7', 'NO', now());
+INSERT INTO `sys`.`messages` (`MESSAGE_ID`, `SUBJECT`, `CONTENT`, `MESSAGE_READ`, `DATE`) VALUES ('8', '8', '8', 'NO', now());
+INSERT INTO `sys`.`messages` (`MESSAGE_ID`, `SUBJECT`, `CONTENT`, `MESSAGE_READ`, `DATE`) VALUES ('9', '9', '9', 'NO', now());
+INSERT INTO `sys`.`messages` (`MESSAGE_ID`, `SUBJECT`, `CONTENT`, `MESSAGE_READ`, `DATE`) VALUES ('10', '10', '10', 'NO', now());
+INSERT INTO `sys`.`messages` (`MESSAGE_ID`, `SUBJECT`, `CONTENT`, `MESSAGE_READ`, `DATE`) VALUES ('11', '11', '11', 'NO', now());
+INSERT INTO `sys`.`messages` (`MESSAGE_ID`, `SUBJECT`, `CONTENT`, `MESSAGE_READ`, `DATE`) VALUES ('12', '12', '12', 'NO', now());
