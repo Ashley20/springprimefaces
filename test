@@ -5,7 +5,6 @@
  */
 package com.journaldev.dao;
 
-
 import com.journaldev.hibernate.data.Message;
 import java.util.List;
 import org.junit.After;
@@ -18,7 +17,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -26,36 +24,135 @@ import org.springframework.transaction.annotation.Transactional;
  * @author xdidemk
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-
 @ContextConfiguration(locations = "file:src/main/webapp/WEB-INF/applicationContext.xml")
-@TransactionConfiguration(defaultRollback=true)
-public class MessageDAOTest {
+@Transactional
+public class MessageDAOIT {
+    
     @Autowired
-    private MessageDAO messageDAO;
-  /*
-     @Before
-    public void init() {
-
-    @Test
-    public void registerTest() {
-        Message ins = new Message();
-        ins.setContent("blabla");
-        ins.setSubject("blababa");
-        messageDAO.register(ins);
-       
-    }
-   
-    @Test
-    public void deleteTest() {
-       int count =  messageDAO.getCount();
-         //messageDAO.delete(5);
-        int count2 = messageDAO.getCount();
-        //assertEquals(count, count2);
+    MessageDAO messageDAO;
+    
+    private List<Message> messageList;
+    private int recordCount;
+  
+    public MessageDAOIT() {
     }
     
-    @Test
-    public void getPaginatedMessages() {
+    @BeforeClass
+    public static void setUpClass() {
+         
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+    }
+    
+    @Before
+    public void setUp() {
+   
+         messageDAO.register(new Message("Test1", "Test1"));
+         messageDAO.register(new Message("Test2", "Test2"));
+         
+         messageList = messageDAO.getAllMessages();
+         recordCount = messageDAO.getCount();
+    }
+    
+    @After
+    public void tearDown() {
+        
         
     }
-    */
+
+    /**
+     * Test of getPaginatedMessages method, of class MessageDAO.
+     */ 
+    @Test
+    public void testGetPaginatedMessages() {
+  
+        int first = 0;
+        int pageSize = 2;
+    
+        List<Message> result = messageDAO.getPaginatedMessages(first, pageSize);
+        assertEquals("Test if we can get messages between indexes: ["+first + " " + pageSize + "]", 2, result.size());
+       
+       
+    }  
+
+    /**
+     * Test of register method, of class MessageDAO.
+     */ 
+    @Test
+    public void testRegister() {
+        
+        
+        assertEquals("Check if the db has 2 records at first", 2, recordCount);
+       
+        messageDAO.register(new Message("testRegister", "testRegister"));
+        int actual = messageDAO.getCount();
+        assertEquals("Check if the db has one record", 3, actual);
+        
+    } 
+    
+     /**
+     * Test of findMessageById method, of class MessageDAO.
+     */ 
+    @Test
+    public void testFindMessageById(){
+        
+  
+        Message fromFindById = messageDAO.findMessageById(messageList.get(0).getMessageId());
+        Message fromList = messageList.get(0);
+        
+        assertSame("Check if those two objects are the same ", fromList, fromFindById);
+    }
+     
+     /**
+     * Test of getCount method, of class MessageDAO.
+     */ 
+    @Test
+    public void testGetCount(){
+        
+         assertEquals("Check if the returned number of records are equal to 2", 2, recordCount);
+        
+    }  
+    
+     /**
+     * Test of delete method, of class MessageDAO.
+     */ 
+    @Test 
+    public void testDelete(){
+      
+         
+         messageDAO.delete(messageList.get(0).getMessageId());
+    
+         Message returnedMessage = messageDAO.findMessageById(messageList.get(0).getMessageId());
+        
+         assertNull("Check if the message has been deleted from db", returnedMessage);
+      
+    }
+   
+     /**
+     * Test of getAllMessages method, of class MessageDAO.
+     */ 
+    @Test 
+    public void testGetAllMessages(){
+ 
+        assertEquals("Check if we could get all messages", recordCount, messageList.size());
+        
+    }
+    
+     /**
+     * Test of changeReadProperty method, of class MessageDAO.
+     */ 
+    @Test
+    public void testChangeReadProperty(){
+        Message messageBefore = messageList.get(0);
+        String readBefore =  messageBefore.getRead();
+        
+        messageDAO.changeReadProperty(messageBefore);
+        
+        Message messageAfter = messageDAO.findMessageById(messageBefore.getMessageId());
+        String readAfter = messageAfter.getRead();
+        
+        assertNotSame("Check if the read property has changed", readBefore, readAfter);
+    } 
 }
