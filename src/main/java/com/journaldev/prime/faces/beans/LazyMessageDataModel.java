@@ -74,11 +74,11 @@ public class LazyMessageDataModel extends LazyDataModel<Message> {
     public List<Message> load(int first, int pageSize, String sortField, SortOrder sortOrder, Map<String,Object> filters) {
          
         List<Message> data = new ArrayList<Message>();
-      
+        System.out.println(sortOrder + "   " + sortField);
    
         datasource =  messageService.getPaginatedMessages(first, pageSize);
+        
         count = messageService.getCount();
-        System.out.println(count);
         this.setRowCount(count);
 
         
@@ -115,12 +115,13 @@ public class LazyMessageDataModel extends LazyDataModel<Message> {
                 data.add(message);
             }
         } 
- 
+
         // sort
         if(sortField != null) {
+            System.out.println(sortField + "    " + sortOrder);
             Collections.sort(data, new LazySorter(sortField, sortOrder));
         } 
- 
+    
  
         // paginate
         if (data.size()  >  pageSize){
