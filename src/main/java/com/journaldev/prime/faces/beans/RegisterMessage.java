@@ -30,12 +30,7 @@ public class RegisterMessage implements Serializable{
     
     
     private LazyDataModel<Message> lazyModel;
-    private LazyDataModel<Message> lazyModelUpdate;
-    private List<Message> messageList;
-    private List<Message> messageUpdateList;
     private Message selectedMessage;
-    private Message message = new Message();
-    private String facesMessage;
     private int countFirst;
     private int countNext;
    
@@ -47,16 +42,6 @@ public class RegisterMessage implements Serializable{
         countFirst = messageService.getCount();
         
     }
-
-
-    public String getFacesMessage() {
-        return facesMessage;
-    }
-
-    public void setFacesMessage(String facesMessage) {
-        this.facesMessage = facesMessage;
-    }
-
    
     public void setMessageService(MessageService messageService) {
         this.messageService = messageService;
@@ -64,14 +49,6 @@ public class RegisterMessage implements Serializable{
     
     public MessageService getMessageService(){
         return messageService;
-    }
-
-    public Message getMessage() {
-        return message;
-    }
-
-    public void setMessage(Message message) {
-        this.message = message;
     }
 
     public LazyDataModel<Message> getLazyModel() {
@@ -88,6 +65,7 @@ public class RegisterMessage implements Serializable{
     
     
     public void onRowSelect(SelectEvent event) {
+       
         messageService.changeReadProperty(selectedMessage);
        
     
@@ -95,42 +73,45 @@ public class RegisterMessage implements Serializable{
     
    
     
-    public String register() {
+    public void register() {
 		// Calling Business Service
-               
+                Message message = new Message();
 		messageService.register(message);
 		// Add message
-		FacesContext.getCurrentInstance().addMessage(null, 
-				new FacesMessage("The Message  Is Registered Successfully"));
-		return "";
+		createFacesMessage("The Message  Is Registered Successfully");
+                
     }
     
     public void delete(Message message){
         
         messageService.delete(message.getMessageId()); 
+        createFacesMessage("You have successfully deleted the message!");
+        System.out.println("maskdmasdas");
     }
     
-    public String checkNewMessages(){
+    public void checkNewMessages(){
      
     
       countNext = messageService.getCount();
        
       if(countNext > countFirst){
-           countFirst = countNext;
-           
-           // Send FaceMessage 
-           FacesContext.getCurrentInstance().addMessage(null, 
-				new FacesMessage("Hey you have some new messages!"));
-		return "";
+          
+          countFirst = countNext;
+          
+          // Create faces message 
+          createFacesMessage("Hey you have some new messages!");
                 
       }else if(countNext < countFirst){
           countFirst = countNext;
-          return "";
-      }
-      else {
          
-		return "";
       }
+      
+    }
+    
+    public String createFacesMessage(String message){
+        
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(message));
+        return "";
     }
   
 	
