@@ -2,6 +2,7 @@ package com.journaldev.hibernate.data;
 
 import com.journaldev.listeners.MessageListener;
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
@@ -12,6 +13,7 @@ import javax.persistence.PostRemove;
 import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
 
 
 
@@ -27,13 +29,16 @@ public class Message implements Serializable  {
     
     private String read;
     
+    private String date;
+    
     public Message(){}
 
-    public Message(Integer messageId, String subject, String content) {
-        this.messageId = messageId;
+    public Message(String subject, String content) {
+        
         this.subject = subject;
         this.content = content;
         this.read = "NO";
+        
     }
     
     
@@ -74,8 +79,17 @@ public class Message implements Serializable  {
     public void setRead(String read) {
         this.read = read;
     }
+
+    @Column(name = "DATE")
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
     
     
-    
+  
     
 }
