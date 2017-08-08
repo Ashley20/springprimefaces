@@ -6,7 +6,7 @@
 <h:head>
 	<script name="jquery/jquery.js" library="primefaces"></script>
 	<title>Register Message</title>
-        
+      
         
 <style type="text/css">
 
@@ -24,65 +24,68 @@
 </h:head>
     
    <h:body >
-  <h:form id="form">
-      
-      <p:dataTable  value="#{registerMessage.lazyModel}" var="message" rows="5" lazy="true" 
-      paginator="true"  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink}  
-      {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}"   rowStyleClass=" #{message.read eq 'NO' ? 'unreadMessageColorStyle' :null}"
-      rowsPerPageTemplate="5, 10" selectionMode="single" id="messageTable" selection="#{registerMessage.selectedMessage}">
+      <p:growl id="growl1" autoUpdate="true"/>
+      <h:form id="form">
+        <p:dataTable  value="#{registerMessage.lazyModel}" var="message" rows="5" lazy="true" 
+           paginator="true"  paginatorTemplate="{RowsPerPageDropdown} {FirstPageLink}  
+           {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink}" 
+           rowStyleClass=" #{message.read eq 'NO' ? 'unreadMessageColorStyle' :null}" sortBy="#{message.messageId}"
+           rowsPerPageTemplate="5, 10" selectionMode="single" id="messageTable"  selection="#{registerMessage.selectedMessage}"
+           sortOrder="DESCENDING" >
          
           <p:ajax event="rowSelect" listener="#{registerMessage.onRowSelect}" update=":form:messageDetail" oncomplete="PF('messageDialog').show()" />
-      
+          <p:growl id="growl1" showDetail="true" sticky="true" autoUpdate="true" />
      
-          <p:column headerText="ID"  sortBy="#{message.messageId}" filterBy="#{message.messageId}">   
+          <p:column headerText="ID"    filterBy="#{message.messageId}" >   
               <h:outputText value="#{message.messageId}" />
           </p:column>
         
-          
-      
-          <p:column headerText="KONU"  filterBy="#{message.subject}">   
+         
+          <p:column headerText="KONU" filterBy="#{message.subject}">   
             <h:outputText value="#{message.subject}" />
           </p:column>
       
-          
-       
+
           <p:column headerText="READ" >   
               <h:outputText value="#{message.read}" />
           </p:column>
+          
+           <p:column headerText="DATE" >   
+               <h:outputText value="#{message.date}" />
+          </p:column>
         
-       
+
           <p:column headerText="" >
-              <p:commandButton type="submit" title="Delete" icon="ui-icon-trash"  actionListener="#{registerMessage.delete(message)}" ajax="false"/>
+              <p:commandButton     actionListener="#{registerMessage.delete(message)}" icon="ui-icon-trash" update="growl1" >  
+                 <p:confirm header="Confirmation" message="Do you really want to delete this message?" icon="ui-icon-alert" />  
+              </p:commandButton>    
           </p:column>
        
+         </p:dataTable>
       
-        
-    </p:dataTable>
+      <h:form>
+         <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">  
+              <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />  
+              <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />  
+         </p:confirmDialog> 
+      </h:form>
       
-      
-      <p:dialog header="Message Detail" widgetVar="messageDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+    <p:dialog header="Message Detail" widgetVar="messageDialog"  dynamic="true" modal="true" showEffect="fade" hideEffect="fade" width="900" height="auto" resizable="yes" minimizable="true">
         <p:outputPanel id="messageDetail" style="text-align:center;">
-            <p:panelGrid  columns="2" rendered="#{not empty registerMessage.selectedMessage}" columnClasses="label,value">
-               
- 
-                <h:outputText value="Subject:" />
-                <h:outputText value="#{registerMessage.selectedMessage.subject}" />
- 
-                <h:outputText value="Content:" />
-                <h:outputText value="#{registerMessage.selectedMessage.content}" />
-             <p:growl id="growl" showDetail="true" sticky="true" />
-        
-            </p:panelGrid>
+             <ui:include  src="messagedetail.xhtml" />
         </p:outputPanel>
     </p:dialog>
       
-      <p:growl id="growl1" showDetail="true" sticky="true" />
-  
-      <p:poll interval="3"   
-            listener="#{registerMessage.checkNewMessages}" update="form"
-    /> 
+ 
+       <p:poll interval="3"   
+            listener="#{registerMessage.checkNewMessages}" update="messageTable" 
+       /> 
+        
+
    </h:form>
+       
+ 
 </h:body>
     
-
+ 
 </html>
