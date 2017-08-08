@@ -46,7 +46,7 @@ public class MessageService{
     public int getCount() {
         return messageDAO.getCount();
     }
-	
+    
     @Transactional
     public void changeReadProperty(Message message){
         messageDAO.changeReadProperty(message);
